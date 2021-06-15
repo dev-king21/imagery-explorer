@@ -1,0 +1,216 @@
+<% content_for :meta_title do %>
+  <% @tour.name %>
+<% end %>
+
+<% content_for :meta_description do %>
+  <% @tour.description %>
+<% end %>
+
+<% content_for :meta_image do %>
+  <% @tour.photos.first.try(:streetview).try(:thumbnail_url) if @tour.photos.any? %>
+<% end %>
+
+<% if @tour.photos.any? %>
+  <% provide :head_tags do %>
+    <meta name='turbolinks-visit-control' content='reload'>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            var photos = <%= raw @tour.photos.try(:to_json) %>;
+            initMap(photos);
+
+            var chartData = <%= raw @tour.photos.group(:taken_at).maximum(:elevation_meters).try(:to_json) %>
+            initElevationChart(chartData, photos);
+        });
+    </script>
+  <% end %>
+<% end %>
+
+<div class="row">
+  <div class="py-5 col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <h1 class="<%= current_user ? 'col-lg-10' : 'col-lg-12' %> col-sm-12">
+            <%= title "#{@tour.name} tour" %>
+          </h1>
+
+          <% description @tour.description %>
+
+          <% if current_user %>
+            <div class="col-lg-2 col-sm-12">
+              <div class="float-right">
+
+                <div class="btn-group mt-2">
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Add to Tourbook
+                  </button>
+                  <div id="tourBooksList" class="dropdown-menu">
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createTourbookModal">Create new Tourbook</a>
+
+                    <% if current_user.tourbooks.any? %>
+                      <div class="dropdown-divider"></div>
+                      <% current_user.tourbooks.each do |book| %>
+                        <%= link_to book.name,
+                                    add_item_user_tourbook_path(current_user, book, item_id: @tour.id),
+                                    class: 'dropdown-item',
+                                    remote: true,
+                                    method: :post %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        <h3 class="card-title"><%= @tour.name %></h3>
+
+        <% if @tour.description.present? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-10">
+              <p><%= @tour.description %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @tour.countries.any? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Tour location</label>
+            <div class="col-sm-10">
+              <% tour_countries(@tour.countries).each do |country| %>
+                <%= link_to country.name, "?query[country_id]=#{country.id}", class: 'btn btn-warning' %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @tour.tags.any? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Tags</label>
+            <div class="col-sm-10">
+              <% @tour.tags.each do |tag| %>
+                <%= link_to tag.name, "?search_text=#{tag.name}", class: 'btn btn-info' %>
+              <% end %>
+
+            </div>
+          </div>
+        <% end %>
+
+        <% if @tour.tour_type.present? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Tour type</label>
+            <div class="col-sm-10">
+              <%= link_to @tour.tour_type, "?query[tour_type]=#{@tour.tour_type}", class: 'btn btn-primary' %>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @tour.transport_type.present? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Transport type</label>
+            <div class="col-sm-10">
+              <%= link_to @tour.transport_type, "?query[transport_type]=#{@tour.transport_type}", class: 'btn btn-secondary' %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Explorer Tour ID</label>
+          <div class="col-sm-10">
+            <%= @tour.id %>
+          </div>
+        </div>
+
+        <% if @tour.tourer_tour_id.present? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Tourer Tour ID</label>
+            <div class="col-sm-10">
+              <%= @tour.tourer_tour_id %>
+            </div>
+          </div>
+        <% end %>
+
+        <h3 class="card-title">Tour sponsors</h3>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card text-white bg-success mb-3">
+              <div class="card-header">Your name here</div>
+              <div class="card-body">
+                <p class="card-text">Is your small business nearby? Are you a local organisation? For a small donation you can be listed as a sponsor of this tour whilst supporting our work to protect the natural world. <a href="https://www.trekview.org/contact/" target="_blank">Contact us for more information</a>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card text-white bg-danger mb-3">
+              <div class="card-header">Your name here</div>
+              <div class="card-body">
+                <p class="card-text">Is your small business nearby? Are you a local organisation? For a small donation you can be listed as a sponsor of this tour whilst supporting our work to protect the natural world. <a href="https://www.trekview.org/contact/" target="_blank">Contact us for more information</a>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="card text-white bg-warning mb-3">
+              <div class="card-header">Your name here</div>
+              <div class="card-body">
+                <p class="card-text">Is your small business nearby? Are you a local organisation? For a small donation you can be listed as a sponsor of this tour whilst supporting our work to protect the natural world. <a href="https://www.trekview.org/contact/" target="_blank">Contact us for more information</a>.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <% if @photos.any? %>
+
+          <h3 class="card-title">Map</h3>
+
+          <div id="map" class="mb-3"></div>
+
+          <h3 class="card-title">Elevation Change</h3>
+
+          <div class="mb-3">
+            <div id="elevation-chart-container"></div>
+          </div>
+
+          <%= render partial: 'photos/photos_display', locals: { photos: @photos } %>
+          <%= paginate @photos, param_name: :photo_pagina %>
+        <% else %>
+
+          <h3 class="card-title">Photos</h3>
+          <p>None exist</p>
+
+        <% end %>
+
+        <h3 class="card-title">Tourbooks</h3>
+
+        <% if @tourbooks.any? %>
+          <div class="sort-wrapper">
+            <%= render(SortComponent, collection_name: :tourbooks, value: @sort.try(:[], :tourbooks)) %>
+          </div>
+
+          <div class="row">
+            <%= render partial: 'tourbooks/tourbooks_display' %>
+            <%= paginate @tourbooks, param_name: :tourbook_pagina %>
+          </div>
+        <% else %>
+          <p>None exist</p>
+        <% end %>
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<%= render 'create_tourbook' %>
+
+<%= render 'show_photo' %>

@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-lg-3">
+    <h2 class="mt-5">Filters</h2>
+    <%= form_tag(tours_path, method: :get, class: 'index-search-form page-item-search clearfix') do %>
+      <div class="search-text clearfix">
+        <div class="search-input mt-3">
+          <%= text_field_tag 'search_text', @search_text, class: 'search-text-input with-img form-control',
+                             placeholder: 'Search for tours' %>
+        </div>
+
+        <div class="search_country mt-3">
+          <%= select_tag 'query[country_id]',
+                         options_from_collection_for_select(Country.all,
+                                                            'id',
+                                                            'name',
+                                                            @query.try(:[], :country_id) ),
+                         class: 'select-country form-control',
+                         include_blank: 'Country' %>
+        </div>
+
+        <div class="search_tour_type mt-3">
+          <%= select_tag 'query[tour_type]',
+                         options_for_select(tour_types_for_select, @query.try(:[], :tour_type)),
+                         class: 'select-tour-type form-control',
+                         include_blank: 'Tour type' %>
+        </div>
+
+        <button class="btn btn-primary mt-3">filter</button>
+
+      </div>
+    <% end %>
+  </div>
+
+  <div class="col-lg-9 tours_list">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="my-4"><%= title 'List of Tours' %></h1>
+        <% description app_description %>
+      </div>
+
+      <div class="col-lg-12">
+        <div class="row tours-container">
+          <%= render partial: 'tour', collection: @tours %>
+        </div>
+      </div>
+    </div>
+
+    <%= paginate @tours %>
+
+  </div>
+</div>

@@ -1,0 +1,43 @@
+body {
+  min-height:100vh;
+}
+
+select {
+  text-transform:capitalize
+}
+
+.sticky-footer-wrapper {
+  min-height:100vh;
+  padding-top: 56px;
+
+  &:after {
+    display: block;
+    height: 170px;
+    clear: both;
+    content: '';
+    visibility: hidden;
+  }
+}
+
+#map {
+  width: 100%;
+  height: 400px;
+}
+
+.explorer-logo {
+  &.navbar-brand {
+    padding: 0 0 0 0;
+  }
+}
+
+.select-sort-by {
+  max-width: 200px;
+}
+.sort-wrapper {
+  padding-bottom: 10px;
+}
+
+.photo-card {
+  margin: auto;
+  max-width: 18rem;
+}

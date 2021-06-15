@@ -1,0 +1,33 @@
+// Place all the styles related to the Home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.home-content {
+  padding: 10px;
+}
+
+.tours-books-toggle {
+  margin: 20px auto;
+
+  label {
+    font-weight: 500;
+  }
+}
+
+.card-img-top {
+  max-height: 280px;
+}
+
+.card {
+  .badge-count {
+    display: inline-block;
+    background-size: contain;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    padding-top: 5px;
+    position: absolute;
+    right: 0;
+    margin: 5px 5px 0 0;
+    z-index: 100;
+  }
+}

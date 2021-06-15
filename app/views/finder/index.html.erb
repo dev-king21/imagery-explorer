@@ -1,0 +1,69 @@
+<div class="row">
+  <div class="col-lg-3">
+    <h2 class="mt-5">Filters</h2>
+    <%= render partial: 'finder/filter_form' %>
+  </div>
+
+  <div class="col-lg-9 home-content">
+    <div class="row">
+      <div class="col-md-9 col-sm-12 mt-8">
+        <%= render partial: 'finder/toggle' %>
+      </div>
+
+      <% if user_signed_in? %>
+        <div class="col-lg-3 col-sm-12 mt-4">
+          <%= link_to 'New Tourbook', new_user_tourbook_path(current_user), class: 'btn btn-primary float-right new-tour-book-btn' %>
+        </div>
+      <% end %>
+    </div>
+
+    <div id="tours-content" style="<%= @tab == 'tours' ? '' : 'display: none;' %>">
+
+      <div class="sort-wrapper">
+        <%= render(SortComponent, collection_name: :tours, value: @sort.try(:[], :tours)) %>
+      </div>
+
+      <div class="row tours-container">
+        <%= render partial: 'tours/tour', collection: @tours %>
+      </div>
+      <%= paginate @tours, param_name: :tour_pagina, :params => {:tab => "tours"} %>
+    </div>
+
+    <div id="tourbooks-content" style="<%= @tab == 'tourbooks' ? '' : 'display: none;' %>">
+
+      <div class="sort-wrapper">
+        <%= render(SortComponent, collection_name: :tourbooks, value: @sort.try(:[], :tourbooks)) %>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row tours-container">
+            <%= render partial: 'tourbooks/tourbooks_display' %>
+          </div>
+        </div>
+
+      </div>
+      <%= paginate @tourbooks, param_name: :tourbook_pagina, :params => {:tab => "tourbooks"} %>
+    </div>
+
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  $('.new-tour-book-btn').hide();
+
+  $('#option-tour').change(function() {
+    $('#tourbooks-content').hide();
+    $('#tours-content').show();
+    $('.new-tour-book-btn').hide();
+    $('#tab').val('tours');
+  });
+
+  $('#option-tourbooks').change(function() {
+    $('#tours-content').hide();
+    $('#tourbooks-content').show();
+    $('.new-tour-book-btn').show();
+    $('#tab').val('tourbooks');
+  });
+
+<% end %>

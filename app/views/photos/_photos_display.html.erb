@@ -1,0 +1,15 @@
+<h3 class="card-title">Photos</h3>
+
+<div class="sort-wrapper">
+  <%= render(SortComponent, collection_name: :photos, value: @sort.try(:[], :photos)) %>
+</div>
+
+<br/>
+
+<div class="row">
+  <% photos.each do |photo| %>
+    <div class="col-lg-4 col-md-6 mb-4 photo-container">
+      <%= render partial: 'photos/photo', locals: { photo: photo } %>
+    </div>
+  <% end %>
+</div>

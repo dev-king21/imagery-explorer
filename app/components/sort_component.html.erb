@@ -1,0 +1,32 @@
+<% case collection_name %>
+<% when :tours %>
+  <%= select_tag 'sort_by',
+                 options_for_select([
+                                        ['created at', 'created_at'],
+                                        ['count of tourbooks', 'tourbooks_count'],
+                                        ['count of photos', 'photos_count'],
+                                        %w(name name)
+                                    ], value),
+                 class: 'select-sort-by sort-tours form-control',
+                 include_blank: 'Sort by'%>
+<% when :tourbooks %>
+  <%= select_tag 'sort_by',
+                 options_for_select([
+                                        ['created at', 'created_at'],
+                                        ['count of tours', 'tours_count'],
+                                        %w(name name)
+                                    ], value),
+                 class: 'select-sort-by sort-tourbooks form-control',
+                 include_blank: 'Sort by' %>
+<% when :photos %>
+  <%= select_tag 'sort_by',
+                 options_for_select([
+                                        ['Capture date', 'taken_at'],
+                                        ['Count of viewpoints', 'count_of_viewpoints'],
+                                        %w(name filename)
+                                    ], value),
+                 class: 'select-sort-by sort-photos form-control',
+                 include_blank: 'Sort by'%>
+<% end %>
+
+<%#= content %>

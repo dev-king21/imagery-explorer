@@ -1,0 +1,7 @@
+var flashContainer = $('.flash-messages');
+flashContainer.html('');
+<% unless @user.errors.any? %>
+  var item = $('.user-api-token');
+  item.text('<%= @user.api_token %>');
+  flashContainer.append("<%= escape_javascript render(partial: 'shared/flash_messages') %>");
+<% end %>

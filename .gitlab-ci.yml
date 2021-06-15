@@ -1,0 +1,90 @@
+image: ruby:2.6.3
+
+cache:
+  paths:
+    - vendor/bundle
+    - node_modules
+
+services:
+  - postgres:10.1
+
+variables:
+  BUNDLE_PATH: vendor/bundle
+  DISABLE_SPRING: 1
+
+  # postgres service configuration for running tests
+  # if changed also remember to change the credentials in config/database.yml.ci
+  # more info: https://docs.gitlab.com/ee/ci/services/postgres.html
+  POSTGRES_DB: explorer_test
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: ""
+
+before_script:
+  # Install node and some other deps
+  - curl -sL https://deb.nodesource.com/setup_11.x | bash -
+  - apt-get update -yq
+  - apt-get install -y apt-transport-https build-essential cmake nodejs software-properties-common unzip
+  
+  # Install yarn
+  - wget -q -O - https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
+  - apt-get update -yq
+  - apt-get install -y yarn
+
+  # Project setup
+  - gem install bundler:2.0.2
+  - bundle check || bundle install --jobs $(nproc)
+  - yarn install
+
+  - cp config/database.yml.ci config/database.yml
+#  - bundle exec rails db:create RAILS_ENV=test
+  - bundle exec rails db:schema:load RAILS_ENV=test
+  - bundle exec rails db:migrate RAILS_ENV=test
+#  - bundle exec webpack
+
+stages:
+  - test
+  - lint
+  - deploy
+
+Tests:
+  stage: test
+  script:
+    - bundle exec rspec
+
+# System Tests:
+#   stage: test
+#   script:
+#     - ./bin/setup_chrome
+#     - bundle exec rails test:system
+
+# Pronto:
+#   stage: lint
+#   allow_failure: true
+#   except:
+#     - production
+#   script:
+#     - bundle exec pronto run -f gitlab -c origin/production
+
+Deploy Production:
+  stage: deploy
+  retry: 2
+  only:
+    - production
+  script:
+    - ./bin/setup_heroku
+    - dpl --provider=heroku --app=$HEROKU_APP_PRODUCTION --api-key=$HEROKU_API_KEY
+    - heroku run rake db:migrate --exit-code --app $HEROKU_APP_PRODUCTION
+    - heroku run rake db:seed --exit-code --app $HEROKU_APP_PRODUCTION
+
+Deploy Staging:
+  stage: deploy
+  allow_failure: true
+  retry: 1
+  only:
+    - staging
+  script:
+    - ./bin/setup_heroku
+    - dpl --provider=heroku --app=$HEROKU_APP_STAGING --api-key=$HEROKU_API_KEY
+    - heroku run rake db:migrate --exit-code --app $HEROKU_APP_STAGING
+    - heroku run rake db:seed --exit-code --app $HEROKU_APP_STAGING

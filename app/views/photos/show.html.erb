@@ -1,0 +1,95 @@
+<% if @tour.photos.present? %>
+  <% provide :head_tags do %>
+    <meta name='turbolinks-visit-control' content='reload'>
+  <% end %>
+<% end %>
+
+<div class="photo-container row">
+  <div class="py-5 col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <%= render(ViewpointComponent, viewpoint: @photo.favoritable_score.present? ? @photo.favoritable_score[:favorite] : 0, photo_id: @photo.id) %>
+        <%= render(EmbedComponent, code: pannellum_iframe(@photo)) %>
+        <div id="panorama"></div>
+        <div id="map" class="mb-3"></div>
+      </div>
+      <div class="card-body">
+
+        <table class="table table-response table-bordered photo-attributes-table">
+          <thead>
+            <th>Attribute</th>
+            <th>Value</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tour</td>
+              <td><%= link_to @tour.name, user_tour_path(@tour.user, @tour) %></td>
+            </tr>
+            <tr>
+              <td>Explorer Photo ID</td>
+              <td><%= @photo.id %></td>
+            </tr>
+            <tr>
+              <td>Tourer Photo ID</td>
+              <td><%= @photo.tourer_photo_id %></td>
+            </tr>
+            <tr>
+              <td>Filename</td>
+              <td><%= "#{@photo.filename}" %></td>
+            </tr>
+            <tr>
+              <td>Capture time</td>
+              <td><%= @photo.taken_at.to_formatted_s(:db) %></td>
+            </tr>
+            <tr>
+              <td>Latitude</td>
+              <td><%= "#{@photo.latitude}" %></td>
+            </tr>
+            <tr>
+              <td>Longitude</td>
+              <td><%= @photo.longitude %></td>
+            </tr>
+            <tr>
+              <td>Elevation</td>
+              <td><%= @photo.elevation_meters %>m</td>
+            </tr>
+            <tr>
+              <td>Photo Country</td>
+              <td><%= @photo.address['country_code'] %></td>
+            </tr>
+            <tr>
+              <td>Google Plus Code</td>
+              <td><%= @photo['address']['plus_code'] %></td>
+            </tr>
+            <tr>
+              <td>Camera make</td>
+              <td><%= @photo.camera_make %></td>
+            </tr>
+            <tr>
+              <td>Camera model</td>
+              <td><%= @photo.camera_model %></td>
+            </tr>
+            <tr>
+              <td>Tourer Connected photos</td>
+              <td>
+                <% @connected_photos.each do |photo| %>
+                  <%= link_to photo.tourer_photo_id, photo_path(photo), target: "_blank" %>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <td>View on Google Street View</td>
+              <% if @photo['streetview']['share_link'] %>
+                <td><%= link_to @photo['streetview']['share_link'], @photo['streetview']['share_link'], target: "_blank" %></td>
+              <% end %>
+            </tr>
+            <tr>
+              <td>OpenTrailView photo id</td>
+              <td>https://www.opentrailview.org/pano.php?id=<%= @photo.opentrailview['photo_id'] %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

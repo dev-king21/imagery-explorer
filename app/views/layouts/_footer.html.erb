@@ -1,0 +1,47 @@
+<footer class="py-4 bg-dark">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md">
+        <h5 class="text-white">About</h5>
+        <p class="m-0 text-white">Unleash your inner explorer and travel the globe without leaving home. Take a journey to sites of cultural, historical, and geographic significance.</p>
+        <br />
+        <p class="m-0 text-white"><%= link_to 'Read more about how Explorer works here', '/about' %>.</p>
+      </div>
+      <div class="col-6 col-md">
+        <h5 class="text-white">Resources</h5>
+        <ul class="list-unstyled text-small text-white">
+          <li><%= link_to 'Upload a Tour', '/upload' %></li>
+          <li><a href="https://www.trekview.org/subscribe" target="_blank">Spotter a Trekker?</a></li>
+          <li><a href="https://www.trekview.org/loan" target="_blank">Become a Trekker</a></li>
+          <li><a href="https://gitlab.com/trekview/explorer/-/wikis/API-Documentation" target="_blank">Explorer API</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md">
+        <h5 class="text-white">Find us on</h5>
+        <ul class="list-unstyled text-small text-white">
+          <li><a href="https://www.trekview.org/blog" target="_blank">Blog</a></li>
+          <li><a href="https://trekview-slackin.herokuapp.com/" target="_blank">Community</a></li>
+          <li><a href="https://www.facebook.com/trekview" target="_blank">Facebook</a></li>
+          <li><a href="https://www.instagram.com/trekviewed/" target="_blank">Instagram</a></li>
+          <li><a href="https://www.google.co.uk/maps/contrib/103906017035515964929/" target="_blank">Google</a></li>
+          <li><a href="https://gitlab.com/trekview/" target="_blank">Gitlab</a></li>
+        </ul>
+      </div>
+      <div class="col-12 col-md">
+        <h5 class="text-white">License</h5>
+        <p class="m-0 text-white">Help improve Explorer. This work is licensed under a <a href="https://gitlab.com/trekview/explorer/" target="_blank">GNU Affero General Public License v3.0</a>.</p>
+        <br />
+        <p class="m-0 text-white">&copy; <%= Time.current.year %> Trek View. <a href="https://www.trekview.org/about/" target="_blank">Read more about our work here</a>.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<%= javascript_tag do %>
+  <% if current_user.present? %>
+    localStorage.setItem('api_token', "<%= current_user.api_token %>")
+  <% else %>
+    localStorage.removeItem('api_token')
+  <% end %>
+
+<% end %>

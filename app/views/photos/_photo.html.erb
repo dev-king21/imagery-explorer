@@ -1,0 +1,13 @@
+
+<div class="card photo-card h-100">
+  <%= render(ViewpointComponent, viewpoint: photo.favoritable_score.present? ? photo.favoritable_score[:favorite] : 0, photo_id: photo.id) %>
+  <a class="photo-card-link" href="<%= photo_path(photo.id) %>">
+  <img class="card-img-top" src="<%= photo_thumb_url(photo) %>" alt="">
+    <div class="card-body">
+      <p class="card-text">Latitude: <%= photo.latitude %></p>
+      <p class="card-text">Longitude: <%= photo.longitude %></p>
+      <p class="card-text">Photo elevation: <%= photo.elevation_meters %>m</p>
+      <p class="card-text">Capture time: <%= photo.taken_at.to_formatted_s(:db) %></p>
+    </div>
+  </a>
+</div>

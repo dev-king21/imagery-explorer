@@ -1,0 +1,57 @@
+<div id="tour-<%= tour.id %>" class="col-lg-4 col-md-6 mb-4 tour-item">
+  <div class="card photo-card h-100">
+    <span class="badge badge-primary badge-count" title="Added to Tourbook"><%= tour.tourbooks_count %></span>
+    <% thumb_url = tour_thumb_url(tour) %>
+    <% if thumb_url.present? %>
+      <img class="card-img-top" src="<%= thumb_url %>" alt="">
+    <% end %>
+    <div class="card-body">
+      <% if @tourbook.present? && policy(@tourbook).remove_item? %>
+        <%= link_to remove_item_user_tourbook_path(tour.user, @tourbook, item_id: tour.id),
+                    class: 'close delete_from_book',
+                    title: 'delete tour from book',
+                    data: {confirm: 'Are you sure?'},
+                    method: :delete,
+                    remote: true do %>
+            <span aria-hidden="true">&times;</span>
+        <% end %>
+      <% end %>
+
+      <h4 class="card-title">
+        <%= link_to tour.name, user_tour_path(tour.user, tour) %>
+      </h4>
+
+      <p class="card-text"><%= truncate(tour.description, length: 120, separator: ' ') %></p>
+
+      <div class="tags">
+        <% tour.tags.each do |tag| %>
+          <%= link_to "##{tag.name}", "?search_text=#{tag.name}", class: 'btn btn-info mb-1' %>
+        <% end %>
+      </div>
+
+      <div class="tour_countries">
+        <% tour_countries(tour.countries).each do |country| %>
+          <%= link_to country.name, "?query[country_id]=#{country.id}", class: 'btn btn-warning mb-1' %>
+        <% end %>
+      </div>
+
+      <% if tour.tour_type %>
+        <div class="tour_type">
+          <%= link_to tour.tour_type, "?query[tour_type]=#{Tour.tour_types[tour.tour_type]}", class: 'btn btn-primary mb-1' %>
+        </div>
+      <% end %>
+
+      <% if tour.transport_type %>
+        <div class="transport_type">
+          <%= link_to tour.transport_type, "?query[transport_type]=#{Tour.transport_types[tour.transport_type]}", class: 'btn btn-secondary mb-1' %>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="card-footer">
+      <small class="text-muted">uploaded by: <%= link_to tour.user.try(:name), user_path(tour.user) %></small>
+    </div>
+  </div>
+
+</div>

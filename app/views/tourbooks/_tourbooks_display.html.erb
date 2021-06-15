@@ -1,0 +1,25 @@
+<% @tourbooks.each do |tourbook| %>
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="card photo-card h-100">
+      <span class="badge badge-pill badge-success badge-count" title="Added to Tourbook"><%= tourbook.tours_count %></span>
+      <% thumb_url = tourbook_thumb_url(tourbook) %>
+      <% if thumb_url.present? %>
+        <img class="card-img-top" src="<%= thumb_url %>" alt="">
+      <% end %>
+      <div class="card-body">
+
+        <h4 class="card-title">
+          <%= link_to tourbook.name, user_tourbook_path(tourbook.user, tourbook) %>
+        </h4>
+
+        <p class="card-text"><%= truncate(tourbook.description, length: 120, separator: ' ') %></p>
+      </div>
+
+      <div class="card-footer">
+        <small class="text-muted">created by: <%= link_to tourbook.user.try(:name), user_tourbooks_path(tourbook.user) %></small>
+      </div>
+
+    </div>
+
+  </div>
+<% end %>

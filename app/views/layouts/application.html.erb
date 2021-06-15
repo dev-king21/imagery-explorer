@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= display_meta_tags site: 'Explorer' %>
+
+    <meta property="og:title" content="<%= meta_title %> | Explorer" />
+    <meta property="og:url" content="<%= request.original_url %>" />
+    <meta property="og:description" content="<%= meta_description %>" />
+
+    <%= include_gon(:init => true) %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    'pannellum', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= render 'layouts/google_analytics' %>
+    <%= render 'layouts/favicon' %>
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=#{ENV['GOOGLE_MAPS_API_KEY']}" %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'pannellum', 'data-turbolinks-track': 'reload' %>
+    <%= yield(:head_tags) %>
+  </head>
+
+  <body>
+    <%= render 'layouts/header' %>
+    <div class="container sticky-footer-wrapper d-flex flex-column">
+      <div class="flash-messages">
+        <%= render 'shared/flash_messages' %>
+      </div>
+      <div class="flex-fill">
+
+        <%= yield %>
+
+      </div>
+    </div>
+    <%= render 'layouts/footer' %>
+  </body>
+</html>

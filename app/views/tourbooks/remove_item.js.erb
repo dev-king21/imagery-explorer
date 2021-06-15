@@ -1,0 +1,3 @@
+var messages = $('.flash-messages');
+messages.html('<%= j render partial: "shared/flash_messages" %>');
+$("#tour-<%= @tour.id %>").remove();

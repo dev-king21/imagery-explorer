@@ -1,0 +1,86 @@
+<% content_for :meta_title do %>
+  <% @tourbook.name %>
+<% end %>
+
+<% content_for :meta_description do %>
+  <% @tourbook.description %>
+<% end %>
+
+<div class="row">
+  <div class="py-5 col-lg-12">
+    <div class="card">
+
+      <div class="card-header">
+        <div class="row">
+
+          <h1 class="col-lg-10 col-sm-12"><%= title "#{@tourbook.name} tourbook" %></h1>
+          <% description @tourbook.description %>
+
+          <% if policy(@tourbook).update? %>
+            <div class="col-lg-1 col-sm-6">
+              <div class="float-right">
+                <%= link_to 'Edit',
+                            edit_user_tourbook_path(@tourbook.user, @tourbook),
+                            class: 'btn btn-warning mt-2' %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if policy(@tourbook).destroy? %>
+            <div class="col-lg-1 col-sm-6">
+              <div class="float-right">
+                <%= link_to 'Delete',
+                            url_for(action: :destroy, id: @tourbook.slug),
+                            method: :delete,
+                            data: {confirm: 'Are you sure?'},
+                            class: 'btn btn-danger mt-2'%>
+              </div>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        <h3 class="card-title"><%= @tourbook.name %></h3>
+
+        <% if @tourbook.description.present? %>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-10 mt-2">
+              <p><%= @tourbook.description %></p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Explorer Tourbook ID</label>
+            <div class="col-sm-10 mt-2">
+              <p><%= @tourbook.id %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <h3 class="card-title">Tourbook sponsors</h3>
+
+          <div class="card text-white bg-dark mb-3">
+            <div class="card-header">Your name here</div>
+            <div class="card-body">
+              <p class="card-text">Is your small business nearby? Are you a local organisation? For a small donation you can be listed as a sponsor of this tourbook whilst supporting our work to protect the natural world. <a href="https://www.trekview.org/contact/" target="_blank">Contact us for more information</a>.</p>
+            </div>
+          </div>
+
+        <% if @tours.any? %>
+          <h4>Added Tours</h4>
+          <div class="sort-wrapper">
+            <%= render(SortComponent, collection_name: :tours, value: @sort.try(:[], :tours)) %>
+          </div>
+          <div class="row">
+            <%= render partial: 'tours/tour', collection: @tours %>
+          </div>
+        <% end %>
+
+      </div>
+
+    </div>
+  </div>
+</div>

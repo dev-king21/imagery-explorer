@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-lg-12">
+    <% if Rails.env.staging? %>
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        You're probably in the wrong place. This is the development version of Explorer. Feel free to have a look around, but you probably want the live version here: <a href="https://explorer.trekview.org">https://explorer.trekview.org</a>
+      </div>
+    <% end %>
+    <% if flash[:success].present? || flash[:information].present? %>
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <%= raw flash[:success] || flash[:information] %>
+      </div>
+    <% end %>
+    <% if flash[:info].present? || flash[:notice].present? %>
+      <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <%= raw flash[:info] || flash[:notice] %>
+      </div>
+    <% end %>
+    <% if flash[:warning].present? %>
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <%= raw flash[:warning] %>
+      </div>
+    <% end %>
+    <% if flash[:danger].present? || flash[:alert].present? || flash[:error] %>
+      <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <%= handle_custom_flash(flash) %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="row">
+  <div class="col-lg-12">
+    <h1 class="my-4"><%= title t('.title', resource: resource_name.to_s.humanize) %></h1>
+    <% description app_description %>
+  </div>
+
+  <div class="col-lg-12">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+      <%= bootstrap_devise_error_messages! %>
+
+      <div class="form-group">
+        <%= f.label :name, 'Username' %>
+        <%= f.text_field :name, autofocus: true, autocomplete: 'name', class: 'form-control', disabled: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password %>
+        <%= f.password_field :password, autocomplete: 'new-password', class: 'form-control' %>
+
+        <small class="form-text text-muted"><%= t('.leave_blank_if_you_don_t_want_to_change_it') %></small>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, autocomplete: 'new-password', class: 'form-control'  %>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <p class="my-4">Your API key: <span class="text-success user-api-token"><%= current_user.api_token %></span></p>
+        </div>
+
+        <div class="col-lg-6">
+          <%= link_to user_generate_new_token_path(current_user), method: :post, confirm: 'Generate new token?',
+                      class: 'btn btn-primary regenerate-token my-3', 'data-message' => 'Are you sure?',
+                      'data-severity' => 'warning', remote: true do %>
+            Generate new API key
+          <% end %>
+          <p class="small"><em>Regenerating your API key will invalidate your existing key immediately.</em></p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :current_password %>
+        <%= f.password_field :current_password, autocomplete: 'current-password', class: 'form-control' %>
+
+        <small class="form-text text-muted"><%= t('.we_need_your_current_password_to_confirm_your_changes') %></small>
+      </div>
+
+      <button type="button" class="btn btn-warning float-right" data-toggle="modal" data-target="#deleteUserModal">
+        Cancel my account
+      </button>
+
+      <div class="form-group">
+        <%= f.submit t('.update'), class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+
+    <%= link_to t('.back'), :back %>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalCenter" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <%= form_tag('/users', method: :delete) do %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete you account?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Current password</label>
+            <input type="password" class="form-control" id="delete_user_current_password" name="user[current_password]">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

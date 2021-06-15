@@ -1,0 +1,23 @@
+<% form_url = @tourbook.new_record? ? user_tourbooks_path : user_tourbook_path %>
+
+<%= form_with(model: @tourbook, url: form_url, local: true) do |f| %>
+
+  <%= form_errors_for @tourbook %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, autofocus: true, autocomplete: 'name', class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :description %>
+    <%= f.text_area :description, autocomplete: 'description', class: 'form-control', size: '60x12' %>
+  </div>
+
+  <div class="form-group">
+    <%= link_to 'Back', :back, class: 'btn btn-success' %>
+    <% button_text = @tourbook.new_record? ? 'Create' : 'Update' %>
+    <%= f.submit button_text , class: 'btn btn-primary' %>
+  </div>
+
+<% end %>
