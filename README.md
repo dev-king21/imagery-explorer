@@ -15,7 +15,3 @@ It is now deprecated with a completely rewritten version here: https://github.co
 7. Start your application `rails server`
 8. Visit page in your browser `http://localhost:3000`
 9. Click 'login' and use `exp-admin@example.com` with password `password` to sign in(or you can register your own user)
-
-## User Documentation
-
-Developer documentation for this project is hosted on the GitHub wiki page for this project at: https://github.com/trek-view/explorer-poc/wiki
